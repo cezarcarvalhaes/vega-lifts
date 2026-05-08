@@ -30,6 +30,9 @@ export default function SignInScreen() {
         await setActive({ session: result.createdSessionId })
         router.replace('/(tabs)')
       }
+      else {
+        Alert.alert('Sign in incomplete', `Additional step required: ${result.status}. Disable MFA on your account to sign in here.`)
+      }
     }
     catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Sign in failed'
