@@ -128,6 +128,27 @@ dist
 # pnpm
 .pnpm-store
 
+# Turbo
+.turbo/
+
+# Expo / React Native
+apps/mobile/.expo/
+apps/mobile/ios/
+apps/mobile/android/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# macOS
+.DS_Store
+
+# Drizzle generated
+drizzle/meta/
+
 # yarn v3
 .pnp.*
 .yarn/*
@@ -141,3 +162,8 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+.claude
+CLAUDE.md 
+PLAN.md
+fitness-app-prd.md

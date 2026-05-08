@@ -1,0 +1,41 @@
+{
+  "name": "vega-lifts",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.0.8",
+  "description": "A no-frills lifting app for getting strong",
+  "author": "Cezar Carvalhaes",
+  "license": "GPL-3.0",
+  "homepage": "https://github.com/cezarcarvalhaes/vega-lifts#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cezarcarvalhaes/vega-lifts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cezarcarvalhaes/vega-lifts/issues"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "lint:fix": "turbo lint:fix",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "db:generate": "turbo db:generate --filter=@vega/db",
+    "db:migrate": "turbo db:migrate --filter=@vega/db",
+    "db:seed": "turbo db:seed --filter=@vega/db"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^8.2.0",
+    "@eslint-react/eslint-plugin": "^3.0.0",
+    "eslint": "^9.39.4",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "jiti": "^2.7.0",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.3"
+  }
+}
