@@ -80,8 +80,7 @@ export default function AddExerciseScreen() {
       });
 
       router.back();
-    }
-    catch (err) {
+    } catch (err) {
       console.error('Failed to add exercise:', err);
       setAdding(null);
     }
@@ -108,7 +107,7 @@ export default function AddExerciseScreen() {
         contentContainerStyle={styles.chips}
         style={styles.chipScroll}
       >
-        {MUSCLE_GROUPS.map(m => (
+        {MUSCLE_GROUPS.map((m) => (
           <Pressable
             key={m}
             style={[styles.chip, muscleFilter === m && styles.chipActive]}
@@ -129,7 +128,7 @@ export default function AddExerciseScreen() {
 
       <FlatList
         data={filtered}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         keyboardShouldPersistTaps="always"
         renderItem={({ item }) => (
           <Pressable

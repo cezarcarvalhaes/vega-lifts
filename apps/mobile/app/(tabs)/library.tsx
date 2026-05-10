@@ -103,11 +103,9 @@ export default function LibraryTab() {
       });
       setShowCreate(false);
       setForm({ name: '', type: 'weighted', primaryMuscleGroup: 'chest', equipment: 'barbell', instructions: '' });
-    }
-    catch {
+    } catch {
       Alert.alert('Error', 'Could not create exercise. Please try again.');
-    }
-    finally {
+    } finally {
       setSaving(false);
     }
   }
@@ -138,7 +136,7 @@ export default function LibraryTab() {
         contentContainerStyle={styles.chips}
         style={styles.chipScroll}
       >
-        {MUSCLE_GROUPS.map(m => (
+        {MUSCLE_GROUPS.map((m) => (
           <Pressable
             key={m}
             style={[styles.chip, muscleFilter === m && styles.chipActive]}
@@ -159,7 +157,7 @@ export default function LibraryTab() {
 
       <FlatList
         data={filtered}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         keyboardShouldPersistTaps="always"
         renderItem={({ item }) => (
           <View style={styles.exerciseRow}>
@@ -202,17 +200,17 @@ export default function LibraryTab() {
               placeholder="e.g. Close Grip Bench Press"
               placeholderTextColor={colors.textMuted}
               value={form.name}
-              onChangeText={v => setForm(f => ({ ...f, name: v }))}
+              onChangeText={(v) => setForm((f) => ({ ...f, name: v }))}
               autoFocus
             />
 
             <Text style={styles.fieldLabel}>Type</Text>
             <View style={styles.segmented}>
-              {TYPE_OPTIONS.map(t => (
+              {TYPE_OPTIONS.map((t) => (
                 <Pressable
                   key={t}
                   style={[styles.segment, form.type === t && styles.segmentActive]}
-                  onPress={() => setForm(f => ({ ...f, type: t }))}
+                  onPress={() => setForm((f) => ({ ...f, type: t }))}
                 >
                   <Text style={[styles.segmentText, form.type === t && styles.segmentTextActive]}>
                     {TYPE_LABELS[t]}
@@ -223,11 +221,11 @@ export default function LibraryTab() {
 
             <Text style={styles.fieldLabel}>Muscle Group</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips} style={{ marginBottom: spacing.md }}>
-              {MUSCLE_OPTIONS.map(m => (
+              {MUSCLE_OPTIONS.map((m) => (
                 <Pressable
                   key={m}
                   style={[styles.chip, form.primaryMuscleGroup === m && styles.chipActive]}
-                  onPress={() => setForm(f => ({ ...f, primaryMuscleGroup: m }))}
+                  onPress={() => setForm((f) => ({ ...f, primaryMuscleGroup: m }))}
                 >
                   <Text style={[styles.chipText, form.primaryMuscleGroup === m && styles.chipTextActive]}>
                     {MUSCLE_LABELS[m]}
@@ -238,11 +236,11 @@ export default function LibraryTab() {
 
             <Text style={styles.fieldLabel}>Equipment</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips} style={{ marginBottom: spacing.md }}>
-              {EQUIPMENT_OPTIONS.map(e => (
+              {EQUIPMENT_OPTIONS.map((e) => (
                 <Pressable
                   key={e}
                   style={[styles.chip, form.equipment === e && styles.chipActive]}
-                  onPress={() => setForm(f => ({ ...f, equipment: e }))}
+                  onPress={() => setForm((f) => ({ ...f, equipment: e }))}
                 >
                   <Text style={[styles.chipText, form.equipment === e && styles.chipTextActive]}>
                     {EQUIPMENT_LABELS[e]}
@@ -257,7 +255,7 @@ export default function LibraryTab() {
               placeholder="Describe the exercise..."
               placeholderTextColor={colors.textMuted}
               value={form.instructions}
-              onChangeText={v => setForm(f => ({ ...f, instructions: v }))}
+              onChangeText={(v) => setForm((f) => ({ ...f, instructions: v }))}
               multiline
               numberOfLines={4}
               textAlignVertical="top"

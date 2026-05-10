@@ -13,8 +13,7 @@ export function AuthRedirect() {
     const inAuthGroup = segments[0] === '(auth)';
     if (!isSignedIn && !inAuthGroup) {
       router.replace('/(auth)/sign-in');
-    }
-    else if (isSignedIn && inAuthGroup) {
+    } else if (isSignedIn && inAuthGroup) {
       router.replace('/(tabs)');
     }
   }, [isSignedIn, isLoaded, segments, router]);

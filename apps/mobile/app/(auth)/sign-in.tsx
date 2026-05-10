@@ -29,16 +29,13 @@ export default function SignInScreen() {
       if (result.status === 'complete') {
         await setActive({ session: result.createdSessionId });
         router.replace('/(tabs)');
-      }
-      else {
+      } else {
         Alert.alert('Sign in incomplete', `Additional step required: ${result.status}. Disable MFA on your account to sign in here.`);
       }
-    }
-    catch (err: unknown) {
+    } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Sign in failed';
       Alert.alert('Sign in failed', message);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   }

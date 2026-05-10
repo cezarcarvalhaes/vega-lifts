@@ -28,7 +28,7 @@ export default function ProfileTab() {
         <Text style={styles.sectionHeader}>Units</Text>
         <View style={styles.card}>
           <View style={styles.segmentRow}>
-            {(['kg', 'lb'] as const).map(unit => (
+            {(['kg', 'lb'] as const).map((unit) => (
               <Pressable
                 key={unit}
                 style={[styles.segment, preferences.unitSystem === unit && styles.segmentActive]}
@@ -49,7 +49,7 @@ export default function ProfileTab() {
             <Text style={styles.rowLabel}>Auto-start after set</Text>
             <Switch
               value={preferences.autoStartRestTimer}
-              onValueChange={v => updatePreferences({ autoStartRestTimer: v })}
+              onValueChange={(v) => updatePreferences({ autoStartRestTimer: v })}
               trackColor={{ false: colors.border, true: colors.accent }}
               thumbColor={colors.text}
             />
@@ -59,7 +59,7 @@ export default function ProfileTab() {
             <Text style={styles.rowLabel}>Sound</Text>
             <Switch
               value={preferences.restTimerSound}
-              onValueChange={v => updatePreferences({ restTimerSound: v })}
+              onValueChange={(v) => updatePreferences({ restTimerSound: v })}
               trackColor={{ false: colors.border, true: colors.accent }}
               thumbColor={colors.text}
             />
@@ -69,7 +69,7 @@ export default function ProfileTab() {
             <Text style={styles.rowLabel}>Haptics</Text>
             <Switch
               value={preferences.restTimerHaptics}
-              onValueChange={v => updatePreferences({ restTimerHaptics: v })}
+              onValueChange={(v) => updatePreferences({ restTimerHaptics: v })}
               trackColor={{ false: colors.border, true: colors.accent }}
               thumbColor={colors.text}
             />
@@ -78,7 +78,7 @@ export default function ProfileTab() {
           <View>
             <Text style={styles.rowLabel}>Default duration</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.presets} style={{ marginTop: spacing.sm }}>
-              {REST_PRESETS.map(s => (
+              {REST_PRESETS.map((s) => (
                 <Pressable
                   key={s}
                   style={[styles.preset, preferences.defaultRestSeconds === s && styles.presetActive]}

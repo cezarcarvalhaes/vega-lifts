@@ -20,8 +20,7 @@ export function StartWorkoutForm({ onStart }: Props) {
     try {
       await onStart(name.trim() || placeholder);
       setName('');
-    }
-    finally {
+    } finally {
       setStarting(false);
     }
   }

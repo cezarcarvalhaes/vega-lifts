@@ -1,4 +1,4 @@
-import antfu from '@antfu/eslint-config'
+import antfu from '@antfu/eslint-config';
 
 export default antfu({
   typescript: true,
@@ -6,7 +6,7 @@ export default antfu({
   stylistic: {
     indent: 2,
     quotes: 'single',
-    semi: false,
+    semi: true,
   },
   ignores: [
     '**/dist/**',
@@ -20,6 +20,8 @@ export default antfu({
 {
   rules: {
     'node/prefer-global/process': 'off',
+    'style/arrow-parens': ['error', 'always'],
+    'style/brace-style': ['error', '1tbs'],
   },
 },
 // Scripts that need console output
@@ -39,4 +41,4 @@ export default antfu({
   rules: {
     'ts/no-use-before-define': 'off',
   },
-})
+});

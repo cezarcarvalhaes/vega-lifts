@@ -32,8 +32,7 @@ export function PreferencesProvider({ children }: { children: React.ReactNode })
       if (raw) {
         try {
           setPrefs({ ...defaults, ...JSON.parse(raw) });
-        }
-        catch {}
+        } catch {}
       }
       setLoaded(true);
     });
@@ -50,7 +49,6 @@ export function PreferencesProvider({ children }: { children: React.ReactNode })
 
   return (
 
-    // eslint-disable-next-line react/no-context-provider
     <PreferencesContext.Provider value={{ preferences: prefs, updatePreferences }}>
       {children}
     </PreferencesContext.Provider>
@@ -58,7 +56,6 @@ export function PreferencesProvider({ children }: { children: React.ReactNode })
 }
 
 export function usePreferences() {
-  // eslint-disable-next-line react/no-use-context
   const ctx = useContext(PreferencesContext);
   if (!ctx)
     throw new Error('usePreferences must be used inside PreferencesProvider');

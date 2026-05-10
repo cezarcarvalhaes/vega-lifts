@@ -81,14 +81,13 @@ export function ExerciseSection({ workoutExercise, workoutId, defaultRestSeconds
 
       setPrevSession({
         date: prevWorkout.finishedAt,
-        sets: prevSets.map(s => ({
+        sets: prevSets.map((s) => ({
           weightKg: s.weightKg,
           reps: s.reps,
           durationSeconds: s.durationSeconds,
         })),
       });
-    }
-    catch {}
+    } catch {}
   }, [database, workoutId]);
 
   useEffect(() => {
@@ -97,7 +96,7 @@ export function ExerciseSection({ workoutExercise, workoutId, defaultRestSeconds
     loadPreviousSession(exercise.id);
   }, [exercise, loadPreviousSession]);
 
-  const lastCompletedSet = sets.filter(s => s.completedAt != null).at(-1);
+  const lastCompletedSet = sets.filter((s) => s.completedAt != null).at(-1);
 
   async function addSet() {
     const nextOrder = sets.length;

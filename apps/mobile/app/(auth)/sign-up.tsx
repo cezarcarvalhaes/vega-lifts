@@ -30,12 +30,10 @@ export default function SignUpScreen() {
       await signUp.create({ emailAddress: email, password });
       await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
       setPendingVerification(true);
-    }
-    catch (err: unknown) {
+    } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Sign up failed';
       Alert.alert('Sign up failed', message);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   }
@@ -50,12 +48,10 @@ export default function SignUpScreen() {
         await setActive({ session: result.createdSessionId });
         router.replace('/(tabs)');
       }
-    }
-    catch (err: unknown) {
+    } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Verification failed';
       Alert.alert('Verification failed', message);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   }

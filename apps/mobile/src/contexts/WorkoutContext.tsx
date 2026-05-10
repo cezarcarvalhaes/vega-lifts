@@ -31,12 +31,10 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
         const workout = await database.get<Workout>('workouts').find(id);
         if (!workout.finishedAt) {
           setActiveWorkoutId(id);
-        }
-        else {
+        } else {
           await AsyncStorage.removeItem(ACTIVE_KEY);
         }
-      }
-      catch {
+      } catch {
         await AsyncStorage.removeItem(ACTIVE_KEY);
       }
     });
@@ -104,7 +102,6 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
 
   return (
 
-    // eslint-disable-next-line react/no-context-provider
     <WorkoutContext.Provider value={{ activeWorkoutId, startWorkout, finishWorkout, discardWorkout }}>
       {children}
     </WorkoutContext.Provider>
@@ -112,7 +109,6 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useWorkout() {
-  // eslint-disable-next-line react/no-use-context
   const ctx = useContext(WorkoutContext);
   if (!ctx)
     throw new Error('useWorkout must be used inside WorkoutProvider');

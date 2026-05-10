@@ -146,7 +146,7 @@ export default function WorkoutScreen() {
           keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}
         >
-          {workoutExercises.map(we => (
+          {workoutExercises.map((we) => (
             <ExerciseSection
               key={we.id}
               workoutExercise={we}

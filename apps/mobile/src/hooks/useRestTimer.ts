@@ -49,7 +49,7 @@ export function useRestTimer() {
       clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => {
       const remaining = Math.max(0, Math.round((endTimestampRef.current - Date.now()) / 1000));
-      setState(prev => ({ ...prev, remaining }));
+      setState((prev) => ({ ...prev, remaining }));
       if (remaining === 0)
         handleExpiryRef.current();
     }, 500);
@@ -66,8 +66,7 @@ export function useRestTimer() {
         endTimestampRef.current = end;
         setState({ isActive: true, remaining, total: remaining });
         startInterval();
-      }
-      else {
+      } else {
         AsyncStorage.removeItem(END_KEY);
         AsyncStorage.removeItem(NOTIF_KEY);
       }
@@ -106,8 +105,7 @@ export function useRestTimer() {
         });
         await AsyncStorage.setItem(NOTIF_KEY, notifId);
       }
-    }
-    catch {}
+    } catch {}
   }, [preferences.restTimerSound, startInterval]);
 
   const stopTimer = useCallback(async () => {

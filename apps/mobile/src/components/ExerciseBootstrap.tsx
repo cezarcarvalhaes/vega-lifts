@@ -22,8 +22,8 @@ export function ExerciseBootstrap() {
     async function syncToLocal() {
       try {
         const existing = await database.get<Exercise>('exercises').query().fetch();
-        const existingIds = new Set(existing.map(e => e.id));
-        const toCreate = serverExercises.filter(e => !existingIds.has(e.id));
+        const existingIds = new Set(existing.map((e) => e.id));
+        const toCreate = serverExercises.filter((e) => !existingIds.has(e.id));
         if (toCreate.length === 0)
           return;
 
@@ -44,8 +44,7 @@ export function ExerciseBootstrap() {
             });
           }
         });
-      }
-      catch (err) {
+      } catch (err) {
         console.warn('Exercise bootstrap failed:', err);
       }
     }
