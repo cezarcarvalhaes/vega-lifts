@@ -1,5 +1,5 @@
 import type { ExerciseType, SetType } from '@vega/types';
-import type { Set as SetModel } from '../db';
+import type { Set as SetModel } from '../../../db';
 import { useDatabase } from '@nozbe/watermelondb/react';
 import * as React from 'react';
 import { useEffect, useReducer, useRef } from 'react';
@@ -10,8 +10,8 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { colors, fontSize, radius, spacing } from '../constants/theme';
-import { useUnit } from '../hooks/useUnit';
+import { colors, fontSize, radius, spacing } from '../../../shared/constants/theme';
+import { useUnit } from '../../../shared/hooks/useUnit';
 
 const SET_TYPE_ORDER: SetType[] = ['normal', 'warmup', 'dropset'];
 const SET_TYPE_LABELS: Record<SetType, string> = { normal: '', warmup: 'W', dropset: 'D' };

@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import * as Notifications from 'expo-notifications';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { usePreferences } from '../contexts/PreferencesContext';
+import { usePreferences } from '../../features/preferences/context/PreferencesContext';
 
 const END_KEY = '@vega/rest_timer_end';
 const NOTIF_KEY = '@vega/rest_timer_notif';

@@ -1,8 +1,8 @@
 import { useAuth, useUser } from '@clerk/clerk-expo';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, fontSize, radius, spacing } from '../../src/constants/theme';
-import { usePreferences } from '../../src/contexts/PreferencesContext';
+import { usePreferences } from '../../src/features/preferences/context/PreferencesContext';
+import { colors, fontSize, radius, spacing } from '../../src/shared/constants/theme';
 
 const REST_PRESETS = [30, 60, 90, 120, 180, 240, 300];
 

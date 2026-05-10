@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, fontSize } from '../../src/constants/theme';
+import { colors, fontSize } from '../../src/shared/constants/theme';
 
 export default function HistoryTab() {
   return (

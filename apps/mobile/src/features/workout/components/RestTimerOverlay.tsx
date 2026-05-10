@@ -1,7 +1,7 @@
-import type { RestTimerState } from '../hooks/useRestTimer';
+import type { RestTimerState } from '../../../shared/hooks/useRestTimer';
 import * as React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, fontSize, radius, spacing } from '../constants/theme';
+import { colors, fontSize, radius, spacing } from '../../../shared/constants/theme';
 
 interface Props {
   timer: RestTimerState;

@@ -1,5 +1,5 @@
 import type { ExerciseType } from '@vega/types';
-import type { Exercise, Set as SetModel, Workout, WorkoutExercise } from '../db';
+import type { Exercise, Set as SetModel, Workout, WorkoutExercise } from '../../../db';
 import { Q } from '@nozbe/watermelondb';
 import { useDatabase } from '@nozbe/watermelondb/react';
 import { formatShortDate } from '@vega/types';
@@ -12,7 +12,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import { colors, fontSize, radius, spacing } from '../constants/theme';
+import { colors, fontSize, radius, spacing } from '../../../shared/constants/theme';
 import { SetRow } from './SetRow';
 
 interface Props {

@@ -1,7 +1,7 @@
 import { getDayName } from '@vega/types';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { colors, fontSize, radius, spacing } from '../../constants/theme';
+import { colors, fontSize, radius, spacing } from '../../../shared/constants/theme';
 
 interface Props {
   onStart: (name: string) => Promise<void>;

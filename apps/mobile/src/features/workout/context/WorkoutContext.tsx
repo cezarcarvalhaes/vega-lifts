@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import type { Set as SetModel, Workout, WorkoutExercise } from '../db';
+import type { Set as SetModel, Workout, WorkoutExercise } from '../../../db';
 import { useAuth } from '@clerk/clerk-expo';
 import { Q } from '@nozbe/watermelondb';
 import { useDatabase } from '@nozbe/watermelondb/react';

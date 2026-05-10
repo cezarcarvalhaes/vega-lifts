@@ -1,10 +1,10 @@
 import { useRouter } from 'expo-router';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ActiveWorkoutCard } from '../../src/components/workout/ActiveWorkoutCard';
-import { StartWorkoutForm } from '../../src/components/workout/StartWorkoutForm';
-import { colors, fontSize, spacing } from '../../src/constants/theme';
-import { useWorkout } from '../../src/contexts/WorkoutContext';
+import { ActiveWorkoutCard } from '../../src/features/workout/components/ActiveWorkoutCard';
+import { StartWorkoutForm } from '../../src/features/workout/components/StartWorkoutForm';
+import { useWorkout } from '../../src/features/workout/context/WorkoutContext';
+import { colors, fontSize, spacing } from '../../src/shared/constants/theme';
 
 export default function WorkoutTab() {
   const router = useRouter();

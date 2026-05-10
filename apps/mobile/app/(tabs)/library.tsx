@@ -23,9 +23,9 @@ import {
   MUSCLE_OPTIONS,
   TYPE_LABELS,
   TYPE_OPTIONS,
-} from '../../src/constants/exercises';
-import { colors, fontSize, radius, spacing } from '../../src/constants/theme';
-import { trpc } from '../../src/lib/trpc';
+} from '../../src/shared/constants/exercises';
+import { colors, fontSize, radius, spacing } from '../../src/shared/constants/theme';
+import { trpc } from '../../src/shared/lib/trpc';
 
 interface CreateForm {
   name: string;

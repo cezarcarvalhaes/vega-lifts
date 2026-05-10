@@ -1,14 +1,14 @@
 import { ClerkProvider } from '@clerk/clerk-expo';
 import { Stack } from 'expo-router';
-import { AuthRedirect } from '../src/components/AuthRedirect';
-import { ExerciseBootstrap } from '../src/components/ExerciseBootstrap';
-import { colors } from '../src/constants/theme';
-import { PreferencesProvider } from '../src/contexts/PreferencesContext';
-import { WorkoutProvider } from '../src/contexts/WorkoutContext';
-import { CLERK_PUBLISHABLE_KEY, tokenCache } from '../src/lib/clerk';
-import { configureNotifications } from '../src/lib/notifications';
+import { PreferencesProvider } from '../src/features/preferences/context/PreferencesContext';
+import { WorkoutProvider } from '../src/features/workout/context/WorkoutContext';
+import { AuthRedirect } from '../src/providers/AuthRedirect';
 import { DatabaseProvider } from '../src/providers/DatabaseProvider';
+import { ExerciseBootstrap } from '../src/providers/ExerciseBootstrap';
 import { TrpcProvider } from '../src/providers/TrpcProvider';
+import { colors } from '../src/shared/constants/theme';
+import { CLERK_PUBLISHABLE_KEY, tokenCache } from '../src/shared/lib/clerk';
+import { configureNotifications } from '../src/shared/lib/notifications';
 
 configureNotifications();
 

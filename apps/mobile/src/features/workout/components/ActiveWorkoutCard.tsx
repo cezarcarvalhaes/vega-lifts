@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, fontSize, radius, spacing } from '../../constants/theme';
+import { colors, fontSize, radius, spacing } from '../../../shared/constants/theme';
 
 interface Props {
   onContinue: () => void;

@@ -13,8 +13,8 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { EXERCISE_TYPE_BG, MUSCLE_GROUPS, MUSCLE_LABELS } from '../../src/constants/exercises';
-import { colors, fontSize, radius, spacing } from '../../src/constants/theme';
+import { EXERCISE_TYPE_BG, MUSCLE_GROUPS, MUSCLE_LABELS } from '../../src/shared/constants/exercises';
+import { colors, fontSize, radius, spacing } from '../../src/shared/constants/theme';
 
 export default function AddExerciseScreen() {
   const { workoutId } = useLocalSearchParams<{ workoutId: string }>();

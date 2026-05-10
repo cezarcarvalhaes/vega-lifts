@@ -2,7 +2,7 @@ import type { Exercise } from '../db';
 import { useAuth } from '@clerk/clerk-expo';
 import { useDatabase } from '@nozbe/watermelondb/react';
 import { useEffect } from 'react';
-import { trpc } from '../lib/trpc';
+import { trpc } from '../shared/lib/trpc';
 
 export function ExerciseBootstrap() {
   const database = useDatabase();

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { usePreferences } from '../contexts/PreferencesContext';
+import { usePreferences } from '../../features/preferences/context/PreferencesContext';
 
 const KG_TO_LB = 2.20462;
 

@@ -14,12 +14,12 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ExerciseSection } from '../../src/components/ExerciseSection';
-import { RestTimerOverlay } from '../../src/components/RestTimerOverlay';
-import { colors, fontSize, radius, spacing } from '../../src/constants/theme';
-import { usePreferences } from '../../src/contexts/PreferencesContext';
-import { useWorkout } from '../../src/contexts/WorkoutContext';
-import { useRestTimer } from '../../src/hooks/useRestTimer';
+import { usePreferences } from '../../src/features/preferences/context/PreferencesContext';
+import { ExerciseSection } from '../../src/features/workout/components/ExerciseSection';
+import { RestTimerOverlay } from '../../src/features/workout/components/RestTimerOverlay';
+import { useWorkout } from '../../src/features/workout/context/WorkoutContext';
+import { colors, fontSize, radius, spacing } from '../../src/shared/constants/theme';
+import { useRestTimer } from '../../src/shared/hooks/useRestTimer';
 
 function formatElapsed(seconds: number): string {
   const h = Math.floor(seconds / 3600);

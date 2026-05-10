@@ -4,7 +4,7 @@ import { httpBatchLink } from '@trpc/client';
 import Constants from 'expo-constants';
 import { useState } from 'react';
 import superjson from 'superjson';
-import { trpc } from '../lib/trpc';
+import { trpc } from '../shared/lib/trpc';
 
 const API_URL
   = Constants.expoConfig?.extra?.apiUrl
