@@ -1,6 +1,6 @@
-import { useSignIn } from '@clerk/clerk-expo'
-import { Link, useRouter } from 'expo-router'
-import { useState } from 'react'
+import { useSignIn } from '@clerk/clerk-expo';
+import { Link, useRouter } from 'expo-router';
+import { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -11,35 +11,35 @@ import {
   Text,
   TextInput,
   View,
-} from 'react-native'
+} from 'react-native';
 
 export default function SignInScreen() {
-  const { signIn, setActive, isLoaded } = useSignIn()
-  const router = useRouter()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
+  const { signIn, setActive, isLoaded } = useSignIn();
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   async function handleSignIn() {
     if (!isLoaded)
-      return
-    setLoading(true)
+      return;
+    setLoading(true);
     try {
-      const result = await signIn.create({ identifier: email, password })
+      const result = await signIn.create({ identifier: email, password });
       if (result.status === 'complete') {
-        await setActive({ session: result.createdSessionId })
-        router.replace('/(tabs)')
+        await setActive({ session: result.createdSessionId });
+        router.replace('/(tabs)');
       }
       else {
-        Alert.alert('Sign in incomplete', `Additional step required: ${result.status}. Disable MFA on your account to sign in here.`)
+        Alert.alert('Sign in incomplete', `Additional step required: ${result.status}. Disable MFA on your account to sign in here.`);
       }
     }
     catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Sign in failed'
-      Alert.alert('Sign in failed', message)
+      const message = err instanceof Error ? err.message : 'Sign in failed';
+      Alert.alert('Sign in failed', message);
     }
     finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -79,7 +79,7 @@ export default function SignInScreen() {
         </Link>
       </View>
     </KeyboardAvoidingView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -104,4 +104,4 @@ const styles = StyleSheet.create({
   },
   buttonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
   link: { color: '#888', textAlign: 'center', marginTop: 8 },
-})
+});

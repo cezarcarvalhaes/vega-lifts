@@ -1,6 +1,6 @@
-import { useSignUp } from '@clerk/clerk-expo'
-import { Link, useRouter } from 'expo-router'
-import { useState } from 'react'
+import { useSignUp } from '@clerk/clerk-expo';
+import { Link, useRouter } from 'expo-router';
+import { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -11,52 +11,52 @@ import {
   Text,
   TextInput,
   View,
-} from 'react-native'
+} from 'react-native';
 
 export default function SignUpScreen() {
-  const { signUp, setActive, isLoaded } = useSignUp()
-  const router = useRouter()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [code, setCode] = useState('')
-  const [pendingVerification, setPendingVerification] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const { signUp, setActive, isLoaded } = useSignUp();
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [code, setCode] = useState('');
+  const [pendingVerification, setPendingVerification] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   async function handleSignUp() {
     if (!isLoaded)
-      return
-    setLoading(true)
+      return;
+    setLoading(true);
     try {
-      await signUp.create({ emailAddress: email, password })
-      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
-      setPendingVerification(true)
+      await signUp.create({ emailAddress: email, password });
+      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
+      setPendingVerification(true);
     }
     catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Sign up failed'
-      Alert.alert('Sign up failed', message)
+      const message = err instanceof Error ? err.message : 'Sign up failed';
+      Alert.alert('Sign up failed', message);
     }
     finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   async function handleVerify() {
     if (!isLoaded)
-      return
-    setLoading(true)
+      return;
+    setLoading(true);
     try {
-      const result = await signUp.attemptEmailAddressVerification({ code })
+      const result = await signUp.attemptEmailAddressVerification({ code });
       if (result.status === 'complete') {
-        await setActive({ session: result.createdSessionId })
-        router.replace('/(tabs)')
+        await setActive({ session: result.createdSessionId });
+        router.replace('/(tabs)');
       }
     }
     catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Verification failed'
-      Alert.alert('Verification failed', message)
+      const message = err instanceof Error ? err.message : 'Verification failed';
+      Alert.alert('Verification failed', message);
     }
     finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -84,7 +84,7 @@ export default function SignUpScreen() {
           </Pressable>
         </View>
       </KeyboardAvoidingView>
-    )
+    );
   }
 
   return (
@@ -117,7 +117,7 @@ export default function SignUpScreen() {
         </Link>
       </View>
     </KeyboardAvoidingView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -143,4 +143,4 @@ const styles = StyleSheet.create({
   },
   buttonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
   link: { color: '#888', textAlign: 'center', marginTop: 8 },
-})
+});

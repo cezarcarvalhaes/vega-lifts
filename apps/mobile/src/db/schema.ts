@@ -1,4 +1,4 @@
-import { appSchema, tableSchema } from '@nozbe/watermelondb'
+import { appSchema, tableSchema } from '@nozbe/watermelondb';
 
 /**
  * WatermelonDB schema mirrors the Postgres schema for all synced tables
@@ -88,4 +88,4 @@ export const schema = appSchema({
       ],
     }),
   ],
-})
+});
