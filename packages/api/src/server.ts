@@ -1,12 +1,12 @@
-import { createExpressMiddleware } from '@trpc/server/adapters/express'
-import cors from 'cors'
-import express from 'express'
-import { appRouter } from './router'
-import { createContext } from './trpc'
-import 'dotenv/config'
+import { createExpressMiddleware } from '@trpc/server/adapters/express';
+import cors from 'cors';
+import express from 'express';
+import { appRouter } from './router';
+import { createContext } from './trpc';
+import 'dotenv/config';
 
-const app = express()
-const PORT = process.env.PORT ?? 3001
+const app = express();
+const PORT = process.env.PORT ?? 3001;
 
 app.use(
   cors({
@@ -15,7 +15,7 @@ app.use(
     ],
     credentials: true,
   }),
-)
+);
 
 app.use(
   '/trpc',
@@ -23,12 +23,12 @@ app.use(
     router: appRouter,
     createContext,
   }),
-)
+);
 
 app.get('/health', (_req, res) => {
-  res.json({ ok: true, timestamp: new Date().toISOString() })
-})
+  res.json({ ok: true, timestamp: new Date().toISOString() });
+});
 
 app.listen(PORT, () => {
-  console.log(`API server running on port ${PORT}`)
-})
+  console.log(`API server running on port ${PORT}`);
+});

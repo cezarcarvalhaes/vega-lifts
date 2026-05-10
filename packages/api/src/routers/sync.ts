@@ -1,5 +1,5 @@
-import { z } from 'zod'
-import { protectedProcedure, router } from '../trpc'
+import { z } from 'zod';
+import { protectedProcedure, router } from '../trpc';
 
 /**
  * WatermelonDB sync endpoints — Phase 3 implementation.
@@ -19,7 +19,7 @@ export const syncRouter = router({
       return {
         changes: {},
         timestamp: Date.now(),
-      }
+      };
     }),
 
   push: protectedProcedure
@@ -31,6 +31,6 @@ export const syncRouter = router({
     )
     .mutation(async () => {
       // Phase 3: apply changes to Postgres
-      return { ok: true }
+      return { ok: true };
     }),
-})
+});

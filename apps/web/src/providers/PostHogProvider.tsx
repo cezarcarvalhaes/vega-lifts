@@ -1,24 +1,24 @@
-'use client'
+'use client';
 
-import { usePathname } from 'next/navigation'
-import posthog from 'posthog-js'
-import { PostHogProvider as PHProvider, usePostHog } from 'posthog-js/react'
-import { useEffect } from 'react'
-import { initPostHog } from '@/lib/posthog'
+import { usePathname } from 'next/navigation';
+import posthog from 'posthog-js';
+import { PostHogProvider as PHProvider, usePostHog } from 'posthog-js/react';
+import { useEffect } from 'react';
+import { initPostHog } from '@/lib/posthog';
 
-initPostHog()
+initPostHog();
 
 function PostHogPageView() {
-  const pathname = usePathname()
-  const ph = usePostHog()
+  const pathname = usePathname();
+  const ph = usePostHog();
 
   useEffect(() => {
     if (pathname) {
-      ph.capture('$pageview', { $current_url: `${window.location.origin}${pathname}` })
+      ph.capture('$pageview', { $current_url: `${window.location.origin}${pathname}` });
     }
-  }, [pathname, ph])
+  }, [pathname, ph]);
 
-  return null
+  return null;
 }
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
@@ -27,5 +27,5 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
       <PostHogPageView />
       {children}
     </PHProvider>
-  )
+  );
 }

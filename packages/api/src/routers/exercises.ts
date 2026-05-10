@@ -1,9 +1,9 @@
-import { exercises, getDb } from '@vega/db'
-import { eq, or } from 'drizzle-orm'
-import { z } from 'zod'
-import { protectedProcedure, publicProcedure, router } from '../trpc'
+import { exercises, getDb } from '@vega/db';
+import { eq, or } from 'drizzle-orm';
+import { z } from 'zod';
+import { protectedProcedure, publicProcedure, router } from '../trpc';
 
-const ExerciseTypeSchema = z.enum(['weighted', 'bodyweight', 'timed'])
+const ExerciseTypeSchema = z.enum(['weighted', 'bodyweight', 'timed']);
 const MuscleGroupSchema = z.enum([
   'chest',
   'back',
@@ -18,7 +18,7 @@ const MuscleGroupSchema = z.enum([
   'calves',
   'full_body',
   'other',
-])
+]);
 const EquipmentSchema = z.enum([
   'barbell',
   'dumbbell',
@@ -28,18 +28,18 @@ const EquipmentSchema = z.enum([
   'kettlebell',
   'bands',
   'other',
-])
+]);
 
 export const exercisesRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {
     return getDb()
       .select()
       .from(exercises)
-      .where(or(eq(exercises.isSystem, true), eq(exercises.userId, ctx.userId)))
+      .where(or(eq(exercises.isSystem, true), eq(exercises.userId, ctx.userId)));
   }),
 
   listSystem: publicProcedure.query(async () => {
-    return getDb().select().from(exercises).where(eq(exercises.isSystem, true))
+    return getDb().select().from(exercises).where(eq(exercises.isSystem, true));
   }),
 
   create: protectedProcedure
@@ -56,7 +56,7 @@ export const exercisesRouter = router({
       const [exercise] = await getDb()
         .insert(exercises)
         .values({ ...input, userId: ctx.userId, isSystem: false })
-        .returning()
-      return exercise
+        .returning();
+      return exercise;
     }),
-})
+});

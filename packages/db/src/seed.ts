@@ -1,8 +1,8 @@
-import type { NewExercise } from './schema'
-import { neon } from '@neondatabase/serverless'
-import { drizzle } from 'drizzle-orm/neon-http'
-import { exercises } from './schema'
-import 'dotenv/config'
+import type { NewExercise } from './schema';
+import { neon } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
+import { exercises } from './schema';
+import 'dotenv/config';
 
 const SYSTEM_EXERCISES: Omit<NewExercise, 'id' | 'userId' | 'createdAt' | 'updatedAt'>[] = [
   // ── Chest ──
@@ -55,27 +55,27 @@ const SYSTEM_EXERCISES: Omit<NewExercise, 'id' | 'userId' | 'createdAt' | 'updat
   { name: 'Ab Wheel Rollout', type: 'bodyweight', primaryMuscleGroup: 'core', equipment: 'other', isSystem: true, instructions: 'Roll out until hips extend, pull back with abs.' },
   { name: 'Cable Crunch', type: 'weighted', primaryMuscleGroup: 'core', equipment: 'cable', isSystem: true, instructions: 'Kneel, pull rope to forehead, crunch down against resistance.' },
   { name: 'Hanging Leg Raise', type: 'bodyweight', primaryMuscleGroup: 'core', equipment: 'bodyweight', isSystem: true, instructions: 'Hang from bar, raise legs to parallel or beyond, control descent.' },
-]
+];
 
 async function seed() {
-  const databaseUrl = process.env.DATABASE_URL
+  const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
-    throw new Error('DATABASE_URL environment variable is required')
+    throw new Error('DATABASE_URL environment variable is required');
   }
-  const sql = neon(databaseUrl)
-  const db = drizzle(sql, { schema: { exercises } })
+  const sql = neon(databaseUrl);
+  const db = drizzle(sql, { schema: { exercises } });
 
-  console.log(`Seeding ${SYSTEM_EXERCISES.length} system exercises...`)
+  console.log(`Seeding ${SYSTEM_EXERCISES.length} system exercises...`);
 
   await db
     .insert(exercises)
-    .values(SYSTEM_EXERCISES.map(e => ({ ...e, userId: null })))
-    .onConflictDoNothing()
+    .values(SYSTEM_EXERCISES.map((e) => ({ ...e, userId: null })))
+    .onConflictDoNothing();
 
-  console.log('Seed complete.')
+  console.log('Seed complete.');
 }
 
 seed().catch((err) => {
-  console.error('Seed failed:', err)
-  process.exit(1)
-})
+  console.error('Seed failed:', err);
+  process.exit(1);
+});

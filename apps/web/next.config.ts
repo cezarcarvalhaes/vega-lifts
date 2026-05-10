@@ -1,7 +1,7 @@
-import type { NextConfig } from 'next'
+import type { NextConfig } from 'next';
 
 const config: NextConfig = {
   transpilePackages: ['@vega/api', '@vega/types'],
-}
+};
 
-export default config
+export default config;

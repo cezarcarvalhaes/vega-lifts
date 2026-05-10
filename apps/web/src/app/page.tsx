@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 
 export default function HomePage() {
   return (
@@ -12,5 +12,5 @@ export default function HomePage() {
         <p>Welcome back. History and analytics coming in Phase 2.</p>
       </SignedIn>
     </main>
-  )
+  );
 }

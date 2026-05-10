@@ -1,5 +1,5 @@
-import nextPlugin from '@next/eslint-plugin-next'
-import rootConfig from '../../eslint.config'
+import nextPlugin from '@next/eslint-plugin-next';
+import rootConfig from '../../eslint.config';
 
 export default rootConfig.append({
   plugins: {
@@ -8,4 +8,4 @@ export default rootConfig.append({
   rules: {
     ...nextPlugin.configs['core-web-vitals'].rules,
   },
-})
+});

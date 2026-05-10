@@ -7,7 +7,7 @@ import {
   text,
   timestamp,
   uuid,
-} from 'drizzle-orm/pg-core'
+} from 'drizzle-orm/pg-core';
 
 // ─── Enums ────────────────────────────────────────────────────────────────────
 
@@ -15,9 +15,9 @@ export const exerciseTypeEnum = pgEnum('exercise_type', [
   'weighted',
   'bodyweight',
   'timed',
-])
+]);
 
-export const setTypeEnum = pgEnum('set_type', ['normal', 'warmup', 'dropset'])
+export const setTypeEnum = pgEnum('set_type', ['normal', 'warmup', 'dropset']);
 
 export const muscleGroupEnum = pgEnum('muscle_group', [
   'chest',
@@ -33,7 +33,7 @@ export const muscleGroupEnum = pgEnum('muscle_group', [
   'calves',
   'full_body',
   'other',
-])
+]);
 
 export const equipmentEnum = pgEnum('equipment', [
   'barbell',
@@ -44,9 +44,9 @@ export const equipmentEnum = pgEnum('equipment', [
   'kettlebell',
   'bands',
   'other',
-])
+]);
 
-export const unitSystemEnum = pgEnum('unit_system', ['kg', 'lb'])
+export const unitSystemEnum = pgEnum('unit_system', ['kg', 'lb']);
 
 // ─── Tables ───────────────────────────────────────────────────────────────────
 
@@ -59,7 +59,7 @@ export const users = pgTable('users', {
   email: text('email').notNull().unique(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
-})
+});
 
 export const userPreferences = pgTable('user_preferences', {
   userId: text('user_id')
@@ -71,7 +71,7 @@ export const userPreferences = pgTable('user_preferences', {
   restTimerSound: boolean('rest_timer_sound').notNull().default(true),
   restTimerHaptics: boolean('rest_timer_haptics').notNull().default(true),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
-})
+});
 
 /**
  * Exercise definitions. System exercises (is_system = true) are global and
@@ -88,7 +88,7 @@ export const exercises = pgTable('exercises', {
   isSystem: boolean('is_system').notNull().default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
-})
+});
 
 /**
  * Saved workout days. System templates are seeded globally and cloneable;
@@ -104,7 +104,7 @@ export const workoutTemplates = pgTable('workout_templates', {
   isSystem: boolean('is_system').notNull().default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
-})
+});
 
 /**
  * Exercises within a template, with prescribed targets.
@@ -125,7 +125,7 @@ export const templateExercises = pgTable('template_exercises', {
   restSeconds: integer('rest_seconds'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
-})
+});
 
 /**
  * A single training session — in-progress or completed.
@@ -145,7 +145,7 @@ export const workouts = pgTable('workouts', {
   durationSeconds: integer('duration_seconds'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
-})
+});
 
 /**
  * Exercise slots within a workout session.
@@ -162,7 +162,7 @@ export const workoutExercises = pgTable('workout_exercises', {
   notes: text('notes'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
-})
+});
 
 /**
  * Individual sets — the atomic unit of workout logging.
@@ -182,27 +182,27 @@ export const sets = pgTable('sets', {
   completedAt: timestamp('completed_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
-})
+});
 
 // ─── Type exports ─────────────────────────────────────────────────────────────
 
-export type User = typeof users.$inferSelect
-export type NewUser = typeof users.$inferInsert
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
 
-export type Exercise = typeof exercises.$inferSelect
-export type NewExercise = typeof exercises.$inferInsert
+export type Exercise = typeof exercises.$inferSelect;
+export type NewExercise = typeof exercises.$inferInsert;
 
-export type WorkoutTemplate = typeof workoutTemplates.$inferSelect
-export type NewWorkoutTemplate = typeof workoutTemplates.$inferInsert
+export type WorkoutTemplate = typeof workoutTemplates.$inferSelect;
+export type NewWorkoutTemplate = typeof workoutTemplates.$inferInsert;
 
-export type TemplateExercise = typeof templateExercises.$inferSelect
-export type NewTemplateExercise = typeof templateExercises.$inferInsert
+export type TemplateExercise = typeof templateExercises.$inferSelect;
+export type NewTemplateExercise = typeof templateExercises.$inferInsert;
 
-export type Workout = typeof workouts.$inferSelect
-export type NewWorkout = typeof workouts.$inferInsert
+export type Workout = typeof workouts.$inferSelect;
+export type NewWorkout = typeof workouts.$inferInsert;
 
-export type WorkoutExercise = typeof workoutExercises.$inferSelect
-export type NewWorkoutExercise = typeof workoutExercises.$inferInsert
+export type WorkoutExercise = typeof workoutExercises.$inferSelect;
+export type NewWorkoutExercise = typeof workoutExercises.$inferInsert;
 
-export type Set = typeof sets.$inferSelect
-export type NewSet = typeof sets.$inferInsert
+export type Set = typeof sets.$inferSelect;
+export type NewSet = typeof sets.$inferInsert;
