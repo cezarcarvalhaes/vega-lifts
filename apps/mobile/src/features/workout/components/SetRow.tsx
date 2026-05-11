@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { colors, fontSize, radius, spacing } from '../../../shared/constants/theme';
 import { useUnit } from '../../../shared/hooks/useUnit';
+import { deriveState, rowReducer } from '../setRowHelpers';
 
 const SET_TYPE_ORDER: SetType[] = ['normal', 'warmup', 'dropset'];
 const SET_TYPE_LABELS: Record<SetType, string> = { normal: '', warmup: 'W', dropset: 'D' };
@@ -28,41 +29,6 @@ interface Props {
   previousSet?: { weightKg: number | null; reps: number | null; durationSeconds: number | null } | null;
   onComplete: () => void;
   onDelete: () => void;
-}
-
-interface RowState {
-  weightText: string;
-  repsText: string;
-  durationText: string;
-  setType: SetType;
-  isCompleted: boolean;
-}
-
-type RowAction
-  = | { type: 'sync'; state: RowState }
-    | { type: 'patch'; patch: Partial<RowState> };
-
-function rowReducer(state: RowState, action: RowAction): RowState {
-  if (action.type === 'sync')
-    return action.state;
-  return { ...state, ...action.patch };
-}
-
-function deriveState(
-  weightKg: number | null,
-  reps: number | null,
-  durationSeconds: number | null,
-  rawType: string,
-  completedAtMs: number | null,
-  displayWeight: (kg: number | null) => string,
-): RowState {
-  return {
-    weightText: displayWeight(weightKg),
-    repsText: reps != null ? String(reps) : '',
-    durationText: durationSeconds != null ? String(durationSeconds) : '',
-    setType: (rawType as SetType | undefined) ?? 'normal',
-    isCompleted: completedAtMs != null,
-  };
 }
 
 export function SetRow({ set, exerciseType, setNumber, previousSet, onComplete, onDelete }: Props) {
