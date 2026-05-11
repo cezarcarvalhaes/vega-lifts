@@ -167,3 +167,5 @@ vite.config.ts.timestamp-*
 CLAUDE.md 
 PLAN.md
 fitness-app-prd.md
+
+.vscode
