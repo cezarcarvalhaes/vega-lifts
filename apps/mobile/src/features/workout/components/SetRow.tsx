@@ -37,16 +37,16 @@ export function SetRow({ set, exerciseType, setNumber, previousSet, onComplete, 
 
   // Destructure primitive fields so each can serve as an individual effect dep.
   // completedAt is a Date so we extract its timestamp for stable comparison.
-  const { weightKg, reps, durationSeconds } = set;
+  const { weightKg, reps, durationSeconds, rpe } = set;
   const rawType = set.type;
   const completedAtMs = set.completedAt?.getTime() ?? null;
 
   const [state, dispatch] = useReducer(
     rowReducer,
     undefined,
-    () => deriveState(weightKg, reps, durationSeconds, rawType, completedAtMs, displayWeight),
+    () => deriveState(weightKg, reps, durationSeconds, rpe, rawType, completedAtMs, displayWeight),
   );
-  const { weightText, repsText, durationText, setType, isCompleted } = state;
+  const { weightText, repsText, durationText, rpeText, setType, isCompleted } = state;
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Sync display state when the model changes externally (e.g. pushed by sync from another device).
@@ -54,14 +54,15 @@ export function SetRow({ set, exerciseType, setNumber, previousSet, onComplete, 
   useEffect(() => {
     dispatch({
       type: 'sync',
-      state: deriveState(weightKg, reps, durationSeconds, rawType, completedAtMs, displayWeight),
+      state: deriveState(weightKg, reps, durationSeconds, rpe, rawType, completedAtMs, displayWeight),
     });
-  }, [set.id, weightKg, reps, durationSeconds, rawType, completedAtMs, displayWeight]);
+  }, [set.id, weightKg, reps, durationSeconds, rpe, rawType, completedAtMs, displayWeight]);
 
   function scheduleSave(updates: {
     weightKg?: number | null;
     reps?: number | null;
     durationSeconds?: number | null;
+    rpe?: number | null;
     type?: SetType;
   }) {
     if (saveTimeoutRef.current)
@@ -75,6 +76,8 @@ export function SetRow({ set, exerciseType, setNumber, previousSet, onComplete, 
             s.reps = updates.reps ?? null;
           if (updates.durationSeconds !== undefined)
             s.durationSeconds = updates.durationSeconds ?? null;
+          if (updates.rpe !== undefined)
+            s.rpe = updates.rpe ?? null;
           if (updates.type !== undefined)
             s.type = updates.type;
           s.updatedAt = new Date();
@@ -97,6 +100,7 @@ export function SetRow({ set, exerciseType, setNumber, previousSet, onComplete, 
         s.weightKg = parseWeight(weightText) ?? null;
         s.reps = repsText ? Number.parseInt(repsText, 10) : null;
         s.durationSeconds = durationText ? Number.parseInt(durationText, 10) : null;
+        s.rpe = rpeText ? Number.parseFloat(rpeText) : null;
         s.completedAt = now;
         s.updatedAt = now;
       });
@@ -198,6 +202,22 @@ export function SetRow({ set, exerciseType, setNumber, previousSet, onComplete, 
         </View>
       )}
 
+      {/* RPE input */}
+      <TextInput
+        style={styles.rpeInput}
+        value={rpeText}
+        onChangeText={(v) => {
+          dispatch({ type: 'patch', patch: { rpeText: v } });
+          scheduleSave({ rpe: v ? Number.parseFloat(v) : null });
+        }}
+        placeholder="-"
+        placeholderTextColor={colors.textMuted}
+        keyboardType="decimal-pad"
+        returnKeyType="done"
+        editable={!isCompleted}
+        selectTextOnFocus
+      />
+
       {/* Complete button */}
       <Pressable
         style={[styles.checkBtn, isCompleted && styles.checkBtnDone]}
@@ -238,6 +258,16 @@ const styles = StyleSheet.create({
     borderRadius: radius.sm,
     paddingHorizontal: spacing.sm,
     height: 44,
+  },
+  rpeInput: {
+    width: 56,
+    backgroundColor: colors.card,
+    borderRadius: radius.sm,
+    height: 44,
+    color: colors.text,
+    fontSize: fontSize.md,
+    fontVariant: ['tabular-nums'],
+    textAlign: 'center',
   },
   input: {
     flex: 1,

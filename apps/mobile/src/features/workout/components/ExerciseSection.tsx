@@ -170,6 +170,7 @@ export function ExerciseSection({ workoutExercise, workoutId, defaultRestSeconds
           <Text style={[styles.colHeader, { flex: 1 }]}>Reps</Text>
         )}
         {exerciseType === 'timed' && <Text style={[styles.colHeader, { flex: 1 }]}>Duration</Text>}
+        <Text style={[styles.colHeader, { width: 56 }]}>RPE</Text>
         <Text style={[styles.colHeader, { width: 44 }]}></Text>
       </View>
 

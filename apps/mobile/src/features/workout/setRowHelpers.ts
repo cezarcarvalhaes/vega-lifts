@@ -4,6 +4,7 @@ export interface RowState {
   weightText: string;
   repsText: string;
   durationText: string;
+  rpeText: string;
   setType: SetType;
   isCompleted: boolean;
 }
@@ -22,6 +23,7 @@ export function deriveState(
   weightKg: number | null,
   reps: number | null,
   durationSeconds: number | null,
+  rpe: number | null,
   rawType: string,
   completedAtMs: number | null,
   displayWeight: (kg: number | null) => string,
@@ -30,6 +32,7 @@ export function deriveState(
     weightText: displayWeight(weightKg),
     repsText: reps != null ? String(reps) : '',
     durationText: durationSeconds != null ? String(durationSeconds) : '',
+    rpeText: rpe != null ? String(rpe) : '',
     setType: (rawType as SetType | undefined) ?? 'normal',
     isCompleted: completedAtMs != null && completedAtMs > 0,
   };
