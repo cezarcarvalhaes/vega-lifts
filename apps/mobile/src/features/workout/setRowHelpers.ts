@@ -31,6 +31,6 @@ export function deriveState(
     repsText: reps != null ? String(reps) : '',
     durationText: durationSeconds != null ? String(durationSeconds) : '',
     setType: (rawType as SetType | undefined) ?? 'normal',
-    isCompleted: completedAtMs != null,
+    isCompleted: completedAtMs != null && completedAtMs > 0,
   };
 }

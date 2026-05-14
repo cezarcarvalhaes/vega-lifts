@@ -73,7 +73,7 @@ export default function AddExerciseScreen() {
           raw.reps = null;
           raw.duration_seconds = null;
           raw.rpe = null;
-          raw.completed_at = 0;
+          raw.completed_at = null;
           raw.created_at = now;
           raw.updated_at = now;
         });

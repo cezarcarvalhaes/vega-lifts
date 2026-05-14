@@ -103,17 +103,17 @@ export function ExerciseSection({ workoutExercise, workoutId, defaultRestSeconds
     const now = new Date();
     await database.write(async () => {
       await database.get<SetModel>('sets').create((s) => {
-        // immutableRelation foreign key has no model setter — raw write is intentional here
-        (s._raw as Record<string, unknown>).workout_exercise_id = workoutExercise.id;
-        s.sortOrder = nextOrder;
-        s.type = 'normal';
-        s.weightKg = lastCompletedSet?.weightKg ?? null;
-        s.reps = lastCompletedSet?.reps ?? null;
-        s.durationSeconds = lastCompletedSet?.durationSeconds ?? null;
-        s.rpe = null;
-        s.completedAt = null;
-        s.createdAt = now;
-        s.updatedAt = now;
+        const raw = s._raw as any;
+        raw.workout_exercise_id = workoutExercise.id;
+        raw.sort_order = nextOrder;
+        raw.type = 'normal';
+        raw.weight_kg = lastCompletedSet?.weightKg ?? null;
+        raw.reps = lastCompletedSet?.reps ?? null;
+        raw.duration_seconds = lastCompletedSet?.durationSeconds ?? null;
+        raw.rpe = null;
+        raw.completed_at = null;
+        raw.created_at = now.getTime();
+        raw.updated_at = now.getTime();
       });
     });
   }
