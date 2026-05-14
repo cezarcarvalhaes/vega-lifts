@@ -24,6 +24,8 @@ export default antfu(
       'node/prefer-global/process': 'off',
       'style/arrow-parens': ['error', 'always'],
       'style/brace-style': ['error', '1tbs'],
+      'react/no-context-provider': 'off',
+      'react/no-use-context': 'off',
     },
   },
   // Scripts that need console output
