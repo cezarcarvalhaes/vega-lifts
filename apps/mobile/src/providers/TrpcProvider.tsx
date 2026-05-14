@@ -6,10 +6,22 @@ import { useState } from 'react';
 import superjson from 'superjson';
 import { trpc } from '../shared/lib/trpc';
 
-const API_URL
-  = Constants.expoConfig?.extra?.apiUrl
-    ?? process.env.EXPO_PUBLIC_API_URL
-    ?? 'http://localhost:3001';
+function getApiUrl() {
+  if (Constants.expoConfig?.extra?.apiUrl)
+    return Constants.expoConfig.extra.apiUrl as string;
+  if (process.env.EXPO_PUBLIC_API_URL)
+    return process.env.EXPO_PUBLIC_API_URL;
+  // Derive host from Metro bundler so physical devices work without manual IP config.
+  // manifest.debuggerHost is e.g. "192.168.1.5:8081"; strip the port for the API.
+  const debuggerHost = (Constants.manifest as any)?.debuggerHost
+    ?? Constants.expoConfig?.hostUri;
+  const host = debuggerHost?.split(':')[0];
+  if (host)
+    return `http://${host}:3001`;
+  return 'http://localhost:3001';
+}
+
+const API_URL = getApiUrl();
 
 export function TrpcProvider({ children }: { children: React.ReactNode }) {
   const { getToken } = useAuth();
