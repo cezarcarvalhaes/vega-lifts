@@ -67,7 +67,9 @@ export function ExerciseSection({ workoutExercise, workoutId, defaultRestSeconds
       } catch {}
     }
     loadTargets();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [database, workoutId, workoutExercise.exerciseId]);
 
   // Observe sets reactively

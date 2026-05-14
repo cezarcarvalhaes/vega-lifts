@@ -1,4 +1,4 @@
-import type { Exercise, TemplateExercise, WorkoutTemplate } from '../../src/db';
+import type { TemplateExercise, WorkoutTemplate } from '../../src/db';
 import { Q } from '@nozbe/watermelondb';
 import { useDatabase } from '@nozbe/watermelondb/react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -42,7 +42,9 @@ export default function TemplateEditorScreen() {
       setName(t.name);
       setNotes(t.notes ?? '');
     }).catch(() => {});
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [templateId, database]);
 
   useEffect(() => {
