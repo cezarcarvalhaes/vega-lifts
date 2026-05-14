@@ -1,5 +1,5 @@
 import type { ExerciseType } from '@vega/types';
-import type { Exercise, Set as SetModel, Workout, WorkoutExercise } from '../../../db';
+import type { Exercise, Set as SetModel, TemplateExercise, Workout, WorkoutExercise } from '../../../db';
 import { Q } from '@nozbe/watermelondb';
 import { useDatabase } from '@nozbe/watermelondb/react';
 import { formatShortDate } from '@vega/types';
@@ -33,6 +33,7 @@ export function ExerciseSection({ workoutExercise, workoutId, defaultRestSeconds
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [sets, setSets] = useState<SetModel[]>([]);
   const [prevSession, setPrevSession] = useState<PrevSession | null>(null);
+  const [templateTargets, setTemplateTargets] = useState<{ reps: string | null; rpe: number | null } | null>(null);
 
   // exerciseId is immutable for this workoutExercise — fetch the definition once
   useEffect(() => {
@@ -42,6 +43,32 @@ export function ExerciseSection({ workoutExercise, workoutId, defaultRestSeconds
       .then(setExercise)
       .catch(() => {});
   }, [database, workoutExercise.exerciseId]);
+
+  // If this workout came from a template, fetch the template_exercise targets
+  // so we can display them as placeholders alongside previous-session data.
+  useEffect(() => {
+    let cancelled = false;
+    async function loadTargets() {
+      try {
+        const workout = await database.get<Workout>('workouts').find(workoutId);
+        if (!workout.templateId)
+          return;
+        const matches = await database
+          .get<TemplateExercise>('template_exercises')
+          .query(
+            Q.where('template_id', workout.templateId),
+            Q.where('exercise_id', workoutExercise.exerciseId),
+          )
+          .fetch();
+        if (cancelled || matches.length === 0)
+          return;
+        const te = matches[0]!;
+        setTemplateTargets({ reps: te.targetReps, rpe: te.targetRpe });
+      } catch {}
+    }
+    loadTargets();
+    return () => { cancelled = true; };
+  }, [database, workoutId, workoutExercise.exerciseId]);
 
   // Observe sets reactively
   useEffect(() => {
@@ -187,6 +214,8 @@ export function ExerciseSection({ workoutExercise, workoutId, defaultRestSeconds
                 durationSeconds: lastCompletedSet.durationSeconds,
               }
             : null)}
+          targetReps={templateTargets?.reps ?? null}
+          targetRpe={templateTargets?.rpe ?? null}
           onComplete={() => onSetComplete(defaultRestSeconds)}
           onDelete={() => deleteSet(set.id)}
         />

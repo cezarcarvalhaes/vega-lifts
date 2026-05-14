@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import type { Set as SetModel, Workout, WorkoutExercise } from '../../../db';
+import type { Set as SetModel, TemplateExercise, Workout, WorkoutExercise, WorkoutTemplate } from '../../../db';
 import { useAuth } from '@clerk/clerk-expo';
 import { Q } from '@nozbe/watermelondb';
 import { useDatabase } from '@nozbe/watermelondb/react';
@@ -12,6 +12,7 @@ const ACTIVE_KEY = '@vega/active_workout_id';
 interface WorkoutContextValue {
   activeWorkoutId: string | null;
   startWorkout: (name: string) => Promise<string>;
+  startWorkoutFromTemplate: (templateId: string) => Promise<string>;
   finishWorkout: (workoutId: string, durationSeconds: number) => Promise<void>;
   discardWorkout: (workoutId: string) => Promise<void>;
 }
@@ -61,6 +62,67 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
     return workout.id;
   }
 
+  async function startWorkoutFromTemplate(templateId: string): Promise<string> {
+    const template = await database.get<WorkoutTemplate>('workout_templates').find(templateId);
+    const templateExercises = await database
+      .get<TemplateExercise>('template_exercises')
+      .query(Q.where('template_id', templateId), Q.sortBy('sort_order', Q.asc))
+      .fetch();
+
+    const now = Date.now();
+    const workout = await database.write(async () => {
+      const w = await database.get<Workout>('workouts').create((record) => {
+        const raw = record._raw as any;
+        raw.user_id = userId!;
+        raw.name = template.name;
+        raw.template_id = templateId;
+        raw.notes = null;
+        raw.started_at = now;
+        raw.finished_at = null;
+        raw.duration_seconds = null;
+        raw.created_at = now;
+        raw.updated_at = now;
+      });
+
+      // Pre-create each exercise + its target number of empty sets.
+      for (let i = 0; i < templateExercises.length; i++) {
+        const te = templateExercises[i]!;
+        const we = await database.get<WorkoutExercise>('workout_exercises').create((record) => {
+          const raw = record._raw as any;
+          raw.workout_id = w.id;
+          raw.exercise_id = te.exerciseId;
+          raw.sort_order = i;
+          raw.notes = null;
+          raw.created_at = now;
+          raw.updated_at = now;
+        });
+
+        const setCount = te.targetSets ?? 1;
+        for (let s = 0; s < setCount; s++) {
+          await database.get<SetModel>('sets').create((record) => {
+            const raw = record._raw as any;
+            raw.workout_exercise_id = we.id;
+            raw.sort_order = s;
+            raw.type = 'normal';
+            raw.weight_kg = null;
+            raw.reps = null;
+            raw.duration_seconds = null;
+            raw.rpe = null;
+            raw.completed_at = null;
+            raw.created_at = now;
+            raw.updated_at = now;
+          });
+        }
+      }
+
+      return w;
+    });
+
+    await AsyncStorage.setItem(ACTIVE_KEY, workout.id);
+    setActiveWorkoutId(workout.id);
+    return workout.id;
+  }
+
   async function finishWorkout(workoutId: string, durationSeconds: number): Promise<void> {
     const now = Date.now();
     const workout = await database.get<Workout>('workouts').find(workoutId);
@@ -102,7 +164,7 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
 
   return (
 
-    <WorkoutContext.Provider value={{ activeWorkoutId, startWorkout, finishWorkout, discardWorkout }}>
+    <WorkoutContext.Provider value={{ activeWorkoutId, startWorkout, startWorkoutFromTemplate, finishWorkout, discardWorkout }}>
       {children}
     </WorkoutContext.Provider>
   );

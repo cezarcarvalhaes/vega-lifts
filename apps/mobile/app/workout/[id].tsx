@@ -1,4 +1,4 @@
-import type { Workout, WorkoutExercise } from '../../src/db';
+import type { Set as SetModel, Workout, WorkoutExercise, WorkoutTemplate } from '../../src/db';
 import { Q } from '@nozbe/watermelondb';
 import { useDatabase } from '@nozbe/watermelondb/react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -20,6 +20,7 @@ import { RestTimerOverlay } from '../../src/features/workout/components/RestTime
 import { useWorkout } from '../../src/features/workout/context/WorkoutContext';
 import { colors, fontSize, radius, spacing } from '../../src/shared/constants/theme';
 import { useRestTimer } from '../../src/shared/hooks/useRestTimer';
+import { trpc } from '../../src/shared/lib/trpc';
 
 function formatElapsed(seconds: number): string {
   const h = Math.floor(seconds / 3600);
@@ -43,6 +44,8 @@ export default function WorkoutScreen() {
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>([]);
   const [elapsed, setElapsed] = useState(0);
   const startedAtRef = useRef<number>(0);
+  const createTemplate = trpc.templates.create.useMutation();
+  const addTemplateExercise = trpc.templates.addExercise.useMutation();
 
   useEffect(() => {
     database.get<Workout>('workouts').find(workoutId).then((w) => {
@@ -90,15 +93,87 @@ export default function WorkoutScreen() {
     });
   }
 
+  async function commitFinish() {
+    stopTimer();
+    await finishWorkout(workoutId, elapsed);
+    router.replace('/(tabs)');
+  }
+
+  async function saveAsTemplate(templateName: string) {
+    try {
+      // Per-exercise completed-set counts derived from the local DB.
+      const exercisesWithCounts = await Promise.all(
+        workoutExercises.map(async (we) => {
+          const completedCount = await database
+            .get<SetModel>('sets')
+            .query(Q.where('workout_exercise_id', we.id), Q.where('completed_at', Q.gt(0)))
+            .fetchCount();
+          return { we, completedCount };
+        }),
+      );
+      const meaningful = exercisesWithCounts.filter((x) => x.completedCount > 0);
+      if (meaningful.length === 0) {
+        Alert.alert('Nothing to save', 'Log at least one set before saving as a template.');
+        return;
+      }
+
+      const created = await createTemplate.mutateAsync({ name: templateName });
+      await database.write(async () => {
+        await database.get<WorkoutTemplate>('workout_templates').create((record) => {
+          const raw = record._raw as any;
+          raw.id = created.id;
+          raw.user_id = created.userId ?? '';
+          raw.name = created.name;
+          raw.notes = created.notes ?? null;
+          raw.is_system = created.isSystem ? 1 : 0;
+          raw.created_at = new Date(created.createdAt).getTime();
+          raw.updated_at = new Date(created.updatedAt).getTime();
+        });
+      });
+
+      for (let i = 0; i < meaningful.length; i++) {
+        const { we, completedCount } = meaningful[i]!;
+        await addTemplateExercise.mutateAsync({
+          templateId: created.id,
+          exerciseId: we.exerciseId,
+          sortOrder: i,
+          targetSets: completedCount,
+        });
+      }
+    } catch {
+      Alert.alert('Error', 'Could not save template.');
+    }
+  }
+
   function handleFinish() {
     Alert.alert('Finish Workout?', 'Great work! This workout will be saved.', [
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Finish',
         onPress: async () => {
-          stopTimer();
-          await finishWorkout(workoutId, elapsed);
-          router.replace('/(tabs)');
+          // Offer to save as template only when the workout wasn't started from one.
+          if (workout && !(workout._raw as any).template_id) {
+            Alert.prompt(
+              'Save as template?',
+              'Save this workout as a template to reuse later.',
+              [
+                { text: 'No thanks', style: 'cancel', onPress: () => commitFinish() },
+                {
+                  text: 'Save',
+                  onPress: async (name) => {
+                    const trimmed = (name ?? '').trim();
+                    if (trimmed.length > 0)
+                      await saveAsTemplate(trimmed);
+                    await commitFinish();
+                  },
+                },
+              ],
+              'plain-text',
+              workout.name,
+            );
+            return;
+          }
+          await commitFinish();
         },
       },
     ]);

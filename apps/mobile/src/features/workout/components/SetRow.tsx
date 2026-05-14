@@ -27,11 +27,13 @@ interface Props {
   exerciseType: ExerciseType;
   setNumber: number;
   previousSet?: { weightKg: number | null; reps: number | null; durationSeconds: number | null } | null;
+  targetReps?: string | null;
+  targetRpe?: number | null;
   onComplete: () => void;
   onDelete: () => void;
 }
 
-export function SetRow({ set, exerciseType, setNumber, previousSet, onComplete, onDelete }: Props) {
+export function SetRow({ set, exerciseType, setNumber, previousSet, targetReps, targetRpe, onComplete, onDelete }: Props) {
   const database = useDatabase();
   const { displayWeight, parseWeight, unitLabel } = useUnit();
 
@@ -120,10 +122,14 @@ export function SetRow({ set, exerciseType, setNumber, previousSet, onComplete, 
   }
 
   const weightPlaceholder = previousSet ? (displayWeight(previousSet.weightKg) || '-') : '-';
-  const repsPlaceholder = previousSet?.reps != null ? String(previousSet.reps) : '-';
+  // Reps: prefer previous-session data; fall back to template target if present.
+  const repsPlaceholder = previousSet?.reps != null
+    ? String(previousSet.reps)
+    : (targetReps ?? '-');
   const durationPlaceholder = previousSet?.durationSeconds != null
     ? String(previousSet.durationSeconds)
     : '-';
+  const rpePlaceholder = targetRpe != null ? String(targetRpe) : '-';
 
   const typeColor = SET_TYPE_COLORS[setType];
   const rowOpacity = isCompleted ? 0.6 : 1;
@@ -210,7 +216,7 @@ export function SetRow({ set, exerciseType, setNumber, previousSet, onComplete, 
           dispatch({ type: 'patch', patch: { rpeText: v } });
           scheduleSave({ rpe: v ? Number.parseFloat(v) : null });
         }}
-        placeholder="-"
+        placeholder={rpePlaceholder}
         placeholderTextColor={colors.textMuted}
         keyboardType="decimal-pad"
         returnKeyType="done"

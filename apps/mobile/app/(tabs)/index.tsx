@@ -1,17 +1,23 @@
+import { getDayName } from '@vega/types';
 import { useRouter } from 'expo-router';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ActiveWorkoutCard } from '../../src/features/workout/components/ActiveWorkoutCard';
-import { StartWorkoutForm } from '../../src/features/workout/components/StartWorkoutForm';
+import { TemplatePicker } from '../../src/features/workout/components/TemplatePicker';
 import { useWorkout } from '../../src/features/workout/context/WorkoutContext';
 import { colors, fontSize, spacing } from '../../src/shared/constants/theme';
 
 export default function WorkoutTab() {
   const router = useRouter();
-  const { activeWorkoutId, startWorkout, discardWorkout } = useWorkout();
+  const { activeWorkoutId, startWorkout, startWorkoutFromTemplate, discardWorkout } = useWorkout();
 
-  async function handleStart(name: string) {
-    const id = await startWorkout(name);
+  async function handleStartFromTemplate(templateId: string) {
+    const id = await startWorkoutFromTemplate(templateId);
+    router.push({ pathname: '/workout/[id]', params: { id } });
+  }
+
+  async function handleStartEmpty() {
+    const id = await startWorkout(`${getDayName()} Session`);
     router.push({ pathname: '/workout/[id]', params: { id } });
   }
 
@@ -40,7 +46,10 @@ export default function WorkoutTab() {
               <ActiveWorkoutCard onContinue={handleContinue} onDiscard={handleDiscard} />
             )
           : (
-              <StartWorkoutForm onStart={handleStart} />
+              <TemplatePicker
+                onStartFromTemplate={handleStartFromTemplate}
+                onStartEmpty={handleStartEmpty}
+              />
             )}
       </View>
     </SafeAreaView>

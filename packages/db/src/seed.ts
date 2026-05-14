@@ -2,7 +2,7 @@ import type { NewExercise } from './schema';
 import { neon } from '@neondatabase/serverless';
 import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/neon-http';
-import { exercises } from './schema';
+import { exercises, templateExercises, workoutTemplates } from './schema';
 import 'dotenv/config';
 
 const SYSTEM_EXERCISES: Omit<NewExercise, 'id' | 'userId' | 'createdAt' | 'updatedAt'>[] = [
@@ -58,21 +58,116 @@ const SYSTEM_EXERCISES: Omit<NewExercise, 'id' | 'userId' | 'createdAt' | 'updat
   { name: 'Hanging Leg Raise', type: 'bodyweight', primaryMuscleGroup: 'core', equipment: 'bodyweight', isSystem: true, instructions: 'Hang from bar, raise legs to parallel or beyond, control descent.' },
 ];
 
+interface TemplateExerciseSeed {
+  exerciseName: string;
+  targetSets: number;
+  targetReps: string;
+  restSeconds: number;
+}
+
+interface TemplateSeed {
+  name: string;
+  notes: string;
+  exercises: TemplateExerciseSeed[];
+}
+
+const SYSTEM_TEMPLATES: TemplateSeed[] = [
+  {
+    name: 'Strong 5×5 — Workout A',
+    notes: 'Classic linear-progression strength template. Alternate with Workout B.',
+    exercises: [
+      { exerciseName: 'Barbell Back Squat', targetSets: 5, targetReps: '5', restSeconds: 180 },
+      { exerciseName: 'Barbell Bench Press', targetSets: 5, targetReps: '5', restSeconds: 180 },
+      { exerciseName: 'Barbell Row', targetSets: 5, targetReps: '5', restSeconds: 180 },
+    ],
+  },
+  {
+    name: 'Strong 5×5 — Workout B',
+    notes: 'Classic linear-progression strength template. Alternate with Workout A.',
+    exercises: [
+      { exerciseName: 'Barbell Back Squat', targetSets: 5, targetReps: '5', restSeconds: 180 },
+      { exerciseName: 'Overhead Press', targetSets: 5, targetReps: '5', restSeconds: 180 },
+      { exerciseName: 'Barbell Deadlift', targetSets: 1, targetReps: '5', restSeconds: 240 },
+    ],
+  },
+  {
+    name: 'Upper Day',
+    notes: 'Upper body — push, pull, isolation.',
+    exercises: [
+      { exerciseName: 'Barbell Bench Press', targetSets: 4, targetReps: '6-8', restSeconds: 150 },
+      { exerciseName: 'Barbell Row', targetSets: 4, targetReps: '6-8', restSeconds: 150 },
+      { exerciseName: 'Overhead Press', targetSets: 3, targetReps: '8-10', restSeconds: 120 },
+      { exerciseName: 'Lat Pulldown', targetSets: 3, targetReps: '10-12', restSeconds: 90 },
+      { exerciseName: 'Barbell Curl', targetSets: 3, targetReps: '10-12', restSeconds: 60 },
+      { exerciseName: 'Tricep Pushdown', targetSets: 3, targetReps: '10-12', restSeconds: 60 },
+    ],
+  },
+  {
+    name: 'Lower Day',
+    notes: 'Lower body — squat, hinge, accessories.',
+    exercises: [
+      { exerciseName: 'Barbell Back Squat', targetSets: 4, targetReps: '6-8', restSeconds: 180 },
+      { exerciseName: 'Romanian Deadlift', targetSets: 4, targetReps: '8-10', restSeconds: 150 },
+      { exerciseName: 'Leg Press', targetSets: 3, targetReps: '10-12', restSeconds: 120 },
+      { exerciseName: 'Leg Curl', targetSets: 3, targetReps: '10-12', restSeconds: 90 },
+      { exerciseName: 'Standing Calf Raise', targetSets: 4, targetReps: '12-15', restSeconds: 60 },
+    ],
+  },
+];
+
 async function seed() {
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
     throw new Error('DATABASE_URL environment variable is required');
   }
   const sql = neon(databaseUrl);
-  const db = drizzle(sql, { schema: { exercises } });
+  const db = drizzle(sql, { schema: { exercises, workoutTemplates, templateExercises } });
+
+  // Clear in dependency order: templates cascade-delete their template_exercises;
+  // then exercises (which can't be deleted while referenced).
+  console.log('Clearing existing system templates...');
+  await db.delete(workoutTemplates).where(eq(workoutTemplates.isSystem, true));
 
   console.log('Clearing existing system exercises...');
   await db.delete(exercises).where(eq(exercises.isSystem, true));
 
   console.log(`Seeding ${SYSTEM_EXERCISES.length} system exercises...`);
-  await db
+  const insertedExercises = await db
     .insert(exercises)
-    .values(SYSTEM_EXERCISES.map((e) => ({ ...e, userId: null })));
+    .values(SYSTEM_EXERCISES.map((e) => ({ ...e, userId: null })))
+    .returning();
+
+  const exerciseIdByName = new Map(insertedExercises.map((e) => [e.name, e.id]));
+
+  console.log(`Seeding ${SYSTEM_TEMPLATES.length} system templates...`);
+  for (const template of SYSTEM_TEMPLATES) {
+    const [inserted] = await db
+      .insert(workoutTemplates)
+      .values({
+        userId: null,
+        name: template.name,
+        notes: template.notes,
+        isSystem: true,
+      })
+      .returning();
+    if (!inserted)
+      throw new Error(`Failed to insert template ${template.name}`);
+
+    const rows = template.exercises.map((ex, idx) => {
+      const exerciseId = exerciseIdByName.get(ex.exerciseName);
+      if (!exerciseId)
+        throw new Error(`Unknown exercise "${ex.exerciseName}" in template "${template.name}"`);
+      return {
+        templateId: inserted.id,
+        exerciseId,
+        sortOrder: idx,
+        targetSets: ex.targetSets,
+        targetReps: ex.targetReps,
+        restSeconds: ex.restSeconds,
+      };
+    });
+    await db.insert(templateExercises).values(rows);
+  }
 
   console.log('Seed complete.');
 }

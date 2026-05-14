@@ -96,9 +96,7 @@ export const exercises = pgTable('exercises', {
  */
 export const workoutTemplates = pgTable('workout_templates', {
   id: uuid('id').primaryKey().defaultRandom(),
-  userId: text('user_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
+  userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
   notes: text('notes'),
   isSystem: boolean('is_system').notNull().default(false),

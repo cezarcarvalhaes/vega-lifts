@@ -10,6 +10,8 @@ export class TemplateExercise extends Model {
     exercises: { type: 'belongs_to' as const, key: 'exercise_id' },
   };
 
+  @field('template_id') templateId!: string;
+  @field('exercise_id') exerciseId!: string;
   @immutableRelation('workout_templates', 'template_id') template!: WorkoutTemplate;
   @immutableRelation('exercises', 'exercise_id') exercise!: Exercise;
   @field('sort_order') sortOrder!: number;
