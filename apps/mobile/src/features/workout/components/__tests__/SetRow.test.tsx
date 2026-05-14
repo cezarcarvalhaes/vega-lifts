@@ -9,30 +9,37 @@ const identity = (kg: number | null) => (kg != null ? String(kg) : '');
 
 describe('deriveState', () => {
   it('converts model fields to display strings', () => {
-    const state = deriveState(100, 5, null, 'normal', null, identity);
+    const state = deriveState(100, 5, null, 8, 'normal', null, identity);
     expect(state.weightText).toBe('100');
     expect(state.repsText).toBe('5');
     expect(state.durationText).toBe('');
+    expect(state.rpeText).toBe('8');
     expect(state.setType).toBe('normal');
     expect(state.isCompleted).toBe(false);
   });
 
   it('marks a set as completed when completedAtMs is set', () => {
-    const state = deriveState(100, 5, null, 'normal', Date.now(), identity);
+    const state = deriveState(100, 5, null, null, 'normal', Date.now(), identity);
     expect(state.isCompleted).toBe(true);
   });
 
   it('handles timed sets — duration populated, weight and reps empty', () => {
-    const state = deriveState(null, null, 60, 'normal', null, identity);
+    const state = deriveState(null, null, 60, null, 'normal', null, identity);
     expect(state.weightText).toBe('');
     expect(state.repsText).toBe('');
     expect(state.durationText).toBe('60');
+    expect(state.rpeText).toBe('');
   });
 
   it('uses the supplied displayWeight function for unit conversion', () => {
     const lbFormatter = (kg: number | null) => (kg != null ? `${kg * 2}` : '');
-    const state = deriveState(50, 5, null, 'normal', null, lbFormatter);
+    const state = deriveState(50, 5, null, null, 'normal', null, lbFormatter);
     expect(state.weightText).toBe('100');
+  });
+
+  it('treats completedAtMs of 0 (epoch) as not completed', () => {
+    const state = deriveState(100, 5, null, null, 'normal', 0, identity);
+    expect(state.isCompleted).toBe(false);
   });
 });
 
@@ -41,6 +48,7 @@ describe('rowReducer', () => {
     weightText: '100',
     repsText: '5',
     durationText: '',
+    rpeText: '',
     setType: 'normal' as const,
     isCompleted: false,
   };
@@ -49,6 +57,7 @@ describe('rowReducer', () => {
     const newState = {
       weightText: '80',
       repsText: '8',
+      rpeText: '7',
       durationText: '',
       setType: 'warmup' as const,
       isCompleted: true,
