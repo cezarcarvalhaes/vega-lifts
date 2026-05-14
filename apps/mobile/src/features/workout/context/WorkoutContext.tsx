@@ -50,8 +50,8 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
         raw.template_id = null;
         raw.notes = null;
         raw.started_at = now;
-        raw.finished_at = 0;
-        raw.duration_seconds = 0;
+        raw.finished_at = null;
+        raw.duration_seconds = null;
         raw.created_at = now;
         raw.updated_at = now;
       });
