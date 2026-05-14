@@ -6,7 +6,9 @@ import { useEffect, useState } from 'react';
 import {
   Alert,
   FlatList,
+  KeyboardAvoidingView,
   Modal,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -159,6 +161,7 @@ export default function LibraryTab() {
         data={filtered}
         keyExtractor={(item) => item.id}
         keyboardShouldPersistTaps="always"
+        style={styles.list}
         renderItem={({ item }) => (
           <View style={styles.exerciseRow}>
             <View style={styles.exerciseInfo}>
@@ -185,7 +188,10 @@ export default function LibraryTab() {
 
       {/* Create custom exercise modal */}
       <Modal visible={showCreate} animationType="slide" presentationStyle="pageSheet">
-        <View style={styles.modal}>
+        <KeyboardAvoidingView
+          style={styles.modal}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>New Exercise</Text>
             <Pressable onPress={() => setShowCreate(false)} hitSlop={12}>
@@ -268,9 +274,9 @@ export default function LibraryTab() {
             >
               <Text style={styles.saveBtnText}>{saving ? 'Saving...' : 'Create Exercise'}</Text>
             </Pressable>
-            <View style={{ height: 40 }} />
+            <View style={{ height: 80 }} />
           </ScrollView>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </SafeAreaView>
   );
@@ -324,6 +330,7 @@ const styles = StyleSheet.create({
   exerciseName: { color: colors.text, fontSize: fontSize.md, fontWeight: '500' },
   exerciseMeta: { color: colors.textSecondary, fontSize: fontSize.xs, marginTop: 2, textTransform: 'capitalize' },
   exerciseType: { color: colors.textMuted, fontSize: fontSize.xs, fontWeight: '700' },
+  list: { flex: 1 },
   separator: { height: 1, backgroundColor: colors.border, marginHorizontal: spacing.lg },
   empty: { padding: spacing.xxl, alignItems: 'center' },
   emptyText: { color: colors.textSecondary, fontSize: fontSize.md },
