@@ -1,5 +1,6 @@
 import type { NewExercise } from './schema';
 import { neon } from '@neondatabase/serverless';
+import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/neon-http';
 import { exercises } from './schema';
 import 'dotenv/config';
@@ -65,12 +66,13 @@ async function seed() {
   const sql = neon(databaseUrl);
   const db = drizzle(sql, { schema: { exercises } });
 
-  console.log(`Seeding ${SYSTEM_EXERCISES.length} system exercises...`);
+  console.log('Clearing existing system exercises...');
+  await db.delete(exercises).where(eq(exercises.isSystem, true));
 
+  console.log(`Seeding ${SYSTEM_EXERCISES.length} system exercises...`);
   await db
     .insert(exercises)
-    .values(SYSTEM_EXERCISES.map((e) => ({ ...e, userId: null })))
-    .onConflictDoNothing();
+    .values(SYSTEM_EXERCISES.map((e) => ({ ...e, userId: null })));
 
   console.log('Seed complete.');
 }
